@@ -1,0 +1,38 @@
+<!-- login allows users to log into their account -->
+
+{% extends 'master' %}
+
+{% block content %}
+    {% if errors %}
+        <div class="alert alert-danger">
+            {% for error in errors %}
+                <li> {{ error.message }} </li>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="container">
+        <div class="row centered-form">
+        	<div class="panel panel-default">
+        		<div class="panel-heading">
+			    	<h3 class="panel-title">Please Sign In</h3>
+			 	</div>
+			 	<div class="panel-body">
+                    {{ form.open({action: 'UserController.login' }) }}
+
+                        {{ csrfField }}
+
+                        <fieldset class="form-group">
+                            {{ form.email('email', null, { class: 'form-control input-sm', placeholder: 'Email Address' }) }}
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            {{ form.password('password', null, { class: 'form-control input-sm', placeholder: 'Password' }) }}
+                        </fieldset>
+
+                        {{ form.submit('Sign In', null, { class: 'btn btn-info btn-block' }) }}
+                    {{ form.close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
