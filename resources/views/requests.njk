@@ -1,0 +1,36 @@
+{% extends 'master' %}
+
+<!--
+    requests view allows to view all the colors that have been created as well 
+    as the users who made the requests. 
+-->
+
+{% block content %}
+    <div class="page-header text-center">
+        <h3>Color Requests</h3>
+    </div>
+    <div class="container">
+        <div class="text-center">
+            <a href="inventory"> Back to inventory</a>
+        </div>
+        <br>
+        {% for color in colors %} 
+            <table class="table">
+                <tr>
+                    <th width="10%"></th>
+                    <th width="70%" style="text-align: center;">{{ color.name }}</th>
+                    <th width="20%" style="background-color: {{ color.color_code }};"></th>
+                </tr>
+                {% set count = 1 %}
+                {% for user in color.users %}
+                    <tr>
+                        <td width="10%">{{count}}</td>
+                        <td width="70%">{{user}}</td>
+                        <td width="20%"></td>
+                    </tr>
+                    {% set count = count + 1 %}
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
+{% endblock %}

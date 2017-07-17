@@ -1,0 +1,66 @@
+{% extends 'master' %}
+
+<!--
+    colors view displays all the possible dye colors
+-->
+
+{% block content %}
+    <div class="page-header text-center">
+        <h3>All the dye colors</h3>
+    </div>
+    <div class="container">
+        <table class="table text-center">
+            <tr>
+                <th style="text-align: center; vertical-align: middle;">Color</th>
+                <th style="text-align: center; vertical-align: middle;">Name</th>
+                <th style="text-align: center; vertical-align: middle;">Available</th>
+                <th style="text-align: center; vertical-align: middle;">Color Request</th>
+            </tr>
+            {% for color in colors %} 
+                {% set heading = false %}
+                {% set display = "" %}
+                {% if color.name == "Fall Flame" %}
+                    {% set display = "<br><h3>Limited Edition Falltones For 2017</h3><br><table class='table text-center'>" %}
+                    {% set heading = true %}
+                {% elif color.name == "Mountain Lake" %}
+                    {% set display = "</table><br><h3>Limited Edition Springtones For 2017</h3><br><table class='table text-center'>" %}
+                    {% set heading = true %}
+                {% elif color.name == "Muir Green" %}
+                    {% set display = "</table><br><h3>Introducing 10 new colors</h3><br><table class='table text-center'>" %}
+                    {% set heading = true %}
+                {% elif color.name == "IVORY" %}
+                    {% set display = "</table><br><h3>Original Colors</h3><br><table class='table text-center'>" %}
+                    {% set heading = true %}
+                {% endif %}
+
+
+                {% if heading == true %}
+                    {{display | safe}}
+                {% endif %}
+
+                <tr>
+                    <td width="25%" style="background-color: {{ color.color_code }} ;"></td>
+                    <td width="40%">{{ color.name }}</td>
+                    <td width="25%">
+                        {% if color.in_stock == 1 %}
+                            In Stock
+                        {% else %}
+                            Out of stock
+                        {% endif %}
+                    </td>
+                    <td width="10%">
+                        {% set count = 0 %}
+                        {% for request in requests %}
+                            {% if request == color.color_code %}
+                                {% set count = 1  %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if count == 0 %}
+                            <a href="colorRequest/{{ color.id }}">Request</a>
+                        {% endif %}
+                    <td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

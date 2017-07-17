@@ -1,0 +1,122 @@
+{% extends 'master' %}
+
+<!--
+    orders view shows admins all the orders divided into three categories
+        1: reveived
+        2: processing
+        3: completed
+    and allows admin to change an order's status
+-->
+
+{% block content %}
+    <div class="page-header text-center">
+        <h2>Orders</h2>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <ul class="nav nav-tabs">
+
+                {% set new_order = 0 %}
+                {% set processing = 0 %}
+                {% set completed = 0 %}
+                {% for order in orders %}
+                    {% if order.status == "received" %}
+                        {% set new_order = new_order + 1 %}
+                    {% elif order.status == "completed" %}
+                        {% set completed = completed + 1 %}
+                    {% else %}
+                        {% set processing = processing + 1 %}
+                    {% endif %}
+                {% endfor %}
+
+                <li class="active">
+                    <a data-toggle="tab" href="#new_order">
+                        New Orders
+                        <span class="badge"> {{new_order}}</span>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#processing">
+                        In-Process Orders 
+                        <span class="badge"> {{processing}}</span>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#completed">
+                        Completed Orders 
+                        <span class="badge"> {{completed}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="new_order" class="tab-pane fade in active">
+                    {% for order in orders %}
+                        {% if order.status == "received" %}
+                            <br>
+                            <ul class="list-group">
+                                <li class="list-group-item">Customer: {{order.display_name}}</li>
+                                <li class="list-group-item">Size: {{order.size}} </li>
+                                <li class="list-group-item">Design: {{order.design}}</li>
+                                <li class="list-group-item">
+                                    Colors:
+                                        {% for color in order.colors %}
+                                            <p style="text-indent: 50px;">{{color}}</p>
+                                        {% endfor %}
+                                </li>
+                                <li class="list-group-item">Ordered: {{order.created_at}}</li>
+                                <li class="list-group-item"><a href='/process/{{ order.id }}'>Process Order</a></li>
+                            </ul>
+                        {% endif %}
+                    {% else %}
+                        <h2> No orders found </h2>
+                    {% endfor %}
+                </div>
+                <div id="processing" class="tab-pane fade">
+                    {% for order in orders %}
+                        {% if order.status == "processing"  %}
+                            <br>
+                            <ul class="list-group">
+                                <li class="list-group-item">Customer: {{order.display_name}}</li>
+                                <li class="list-group-item">Size: {{order.size}} </li>
+                                <li class="list-group-item">Design: {{order.design}}</li>
+                                <li class="list-group-item">
+                                    Colors:
+                                        {% for color in order.colors %}
+                                            <p style="text-indent: 50px;">{{color}}</p>
+                                        {% endfor %}
+                                </li>
+                                <li class="list-group-item">Ordered: {{order.created_at}}</li>
+                                <li class="list-group-item"><a href='/complete/{{ order.id }}'>Complete Order</a></li>
+                            </ul>
+                        {% endif %}
+                    {% else %}
+                        <h2> No orders found </h2>
+                    {% endfor %}
+                </div>
+                <div id="completed" class="tab-pane fade">
+                    {% for order in orders %}
+                        {% if order.status == "completed" %}
+                            <br>
+                            <ul class="list-group">
+                                <li class="list-group-item">Customer: {{order.display_name}}</li>
+                                <li class="list-group-item">Size: {{order.size}} </li>
+                                <li class="list-group-item">Design: {{order.design}}</li>
+                                <li class="list-group-item">
+                                    Colors:
+                                        {% for color in order.colors %}
+                                            <p style="text-indent: 50px;">{{color}}</p>
+                                        {% endfor %}
+                                </li>
+                                <li class="list-group-item">Ordered: {{order.created_at}}</li>
+                            </ul>
+                        {% endif %}
+                    {% else %}
+                        <h2> No orders found </h2>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+{% endblock %}

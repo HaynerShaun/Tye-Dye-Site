@@ -1,6 +1,8 @@
-<!-- register display the form for account creation -->
-
 {% extends 'master' %}
+
+<!-- 
+	register display the form for account creation 
+-->
 
 {% block content %}
     {% if old('errors') %}
@@ -54,7 +56,7 @@
 			    				</div>
 			    			</div>
 			    			
-			    			<input type="submit" value="Register" class="btn btn-info btn-block" action="UserController.create">
+			    			<input type="submit" value="Register" class="btn btn-info btn-block" action="AuthController.create">
 			    		
 			    		</form>
 			    	</div>

@@ -1,0 +1,80 @@
+{% extends 'master' %}
+
+<!--
+    ratings view displays all the ratings for the site and post their own
+-->
+
+{% block content %}
+    <div class="container-fluid">  
+        <div class="row"> 
+            <div class="col-md-8">
+                <div class="reviews-wrapper" id="reviews_display" >
+                    {% for review in reviews %} 
+                        <div class='review'>
+                            <h2> {{ review.title }} </h2> 
+                            <h4> {{ review.rating }} star rating </h4> 
+                            <p> {{ review.review }} </p>
+                            <p><small>Posted by: {{ review.display_name }} </small></p>
+                            {% if role == "admin" %}
+                                <a href="deleteReview/{{ review.id }}">Delete post for inappropriate content</a>
+                            {% endif %}
+                            <hr>
+                        </div>
+                    {% else %}
+                        <h2> No ratings found </h2>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="page-header text-center">
+                    <h3>Tell us what you think!</h3>
+                </div>
+                {{ form.open({action: 'ReviewController.create'}) }}
+                    {{ csrfField }}
+
+                    <fieldset class="form-group">
+                        {{ form.label('Review Title') }}
+                        {{ form.text('title', null, { class: 'form-control' }) }}
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        {{ form.label('Review Content') }}
+                        {{ form.textarea('review', null, { class: 'form-control' }) }}
+                    </fieldset>
+                    
+                    <fieldset class="form-group">
+                        <table class="table text-center">
+                            <tr>
+                                <th colspan="5">{{ form.label('Rating:') }}</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ form.radio('rating', '1') }}
+                                    {{ form.label('1 star') }}
+                                </td>
+                                <td>
+                                    {{ form.radio('rating', '2') }}
+                                    {{ form.label('2 star') }}
+                                </td>
+                                <td>
+                                    {{ form.radio('rating', '3') }}
+                                    {{ form.label('3 star') }}
+                                </td>
+                                <td>
+                                    {{ form.radio('rating', '4') }}
+                                    {{ form.label('4 star') }}
+                                </td>
+                                <td>
+                                    {{ form.radio('rating', '5') }}
+                                    {{ form.label('5 star') }}
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+
+                    {{ form.submit('Post', 'post', { class: 'btn btn-primary btn-block' }) }}
+                {{ form.close() }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

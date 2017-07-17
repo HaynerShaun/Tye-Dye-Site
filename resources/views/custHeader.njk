@@ -1,0 +1,33 @@
+{% extends 'master' %}
+
+<!--
+    custHeader view handles some of the display for customer pages
+-->
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav">
+                    <li>
+                        <a href="/profile">
+                            User Information
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/custOrders">
+                            Orders 
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-5">        
+                <section>
+                    {% block cust %}{% endblock %}
+                </section>
+            </div>
+            <div class="col-md-4">  
+            </div>
+        </div>
+    </div>
+{% endblock %}

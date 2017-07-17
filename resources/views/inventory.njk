@@ -1,0 +1,87 @@
+{% extends 'master' %}
+
+<!--
+    inventory view displays the color inventory for admins and allows them to 
+    change the inventory status for dye colors
+-->
+
+{% block content %}
+    <div class="page-header text-center">
+        <h2>Inventory</h2>
+    </div>
+    <div class="container-fluid">
+        <div class="row"> 
+            <div class="col-md-4">
+                <!-- In stock colors -->
+                <div class="text-center">
+                    <h4>In Stock</h4>
+                </div>
+                <table class="table text-center">
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;">Color</th>
+                        <th style="text-align: center; vertical-align: middle;">Name</th>
+                        <th style="text-align: center; vertical-align: middle;"></th>
+                    </tr>
+                    {% for item in stock %}
+                        {% if item.in_stock == 1 %}
+                            <tr>
+                                <td width="20%" style="background-color: {{ item.color_code }} ;"></td>
+                                <td width="55%">{{ item.name }}</td>
+                                <td width="25%"><a href="out_of_stock/{{ item.color_id }}">Out of stock</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-md-4">
+                <!-- Out of stock colors with requests-->
+                <div class="text-center">
+                    <h4>Out of stock colors with customer requests</h4>
+                </div>
+                <table class="table text-center">
+                    <tr>
+                        <th colspan='4' style="text-align: center; vertical-align: middle;"><a href="requests">View Requests</a></th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;">Color</th>
+                        <th style="text-align: center; vertical-align: middle;">Name</th>
+                        <th style="text-align: center; vertical-align: middle;"># of Requests</th>
+                        <th style="text-align: center; vertical-align: middle;"></th>
+                    </tr>
+                    {% for item in stock %}
+                        {% if item.in_stock == 0 and item.requests > 0 %}
+                            <tr>
+                                <td width="20%" style="background-color: {{ item.color_code }} ;"></td>
+                                <td width="45%">{{ item.name }}</td>
+                                <td width="15%">{{ item.requests }}</td>
+                                <td width="20%"><a href="in_stock/{{ item.color_id }}">In stock</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-md-4">
+                <!-- Out of stock colors without requests-->
+                <div class="text-center">
+                    <h4>Out of stock colors with no customer requests</h4>
+                </div>
+                <table class="table text-center">
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;">Color</th>
+                        <th style="text-align: center; vertical-align: middle;">Name</th>
+                        <th style="text-align: center; vertical-align: middle;"></th>
+                    </tr>
+                    {% for item in stock %}
+                        {% if item.in_stock == 0 and item.requests == 0 %}
+                            <tr>
+                                <td width="20%" style="background-color: {{ item.color_code }} ;"></td>
+                                <td width="55%">{{ item.name }}</td>
+                                <td width="25%"><a href="in_stock/{{ item.color_id }}">In stock</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

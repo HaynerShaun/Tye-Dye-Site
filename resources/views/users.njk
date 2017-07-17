@@ -1,0 +1,48 @@
+{% extends 'master' %}
+
+<!--
+    users view displays all user accounts for admin to see. Allows admin to give
+    or take away admin status. 
+-->
+
+{% block content %}
+    <div class="page-header text-center">
+        <h3>All registered accounts</h3>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <table class="table text-center">
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle;">Display Name</th>
+                        <th style="text-align: center; vertical-align: middle;">Name</th>
+                        <th style="text-align: center; vertical-align: middle;">Email</th>
+                        <th style="text-align: center; vertical-align: middle;">Role</th>
+                    </tr>
+                    {% for user in users %} 
+                        <tr>
+                            <td width="20%">{{ user.display_name }}</td>
+                            <td width="25%">{{ user.first_name }} {{ user.last_name }}</td>
+                            <td width="25%">{{ user.email }}</td>
+                            <td width="30%">
+                                {% if user.role == "user" %}
+                                    <a href="/add_admin/{{ user.id }}">Make Admin</a>
+                                {% else %}
+                                    {% if user.id == id %}
+                                        Admin
+                                    {% else %}
+                                        <a href="/remove_admin/{{ user.id }}">Remove Admin</a>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+{% endblock %}

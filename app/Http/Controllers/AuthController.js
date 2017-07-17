@@ -3,21 +3,34 @@
 const User = use('App/Model/User')
 const Database = use('Database')
 const Validator = use('Validator')
-const Hash = use('Hash')
 
-class UserController {
+class AuthController {
+
+    //--------------------------------------------------------------------------
+
+    /*
+        index sends users to the login page
+    */
 
     * index (request, response) { 
         yield response.sendView('login') 
     }
 
+    //--------------------------------------------------------------------------
+
+    /*
+        register sends users to the register page
+    */
+
     * register (request, response) { 
         yield response.sendView('register') 
     }
 
-    * home (request, response) { 
-        yield response.sendView('home') 
-    }
+    //--------------------------------------------------------------------------
+
+    /*
+        create adds a new user to the database
+    */
 
     * create (request, response) { 
         const userData = request.only('email', 'password', 'display_name', 'first_name', 'last_name')
@@ -42,9 +55,17 @@ class UserController {
             return
         }
 
+        userData.role = "user"
+
         yield User.create(userData)
         response.redirect('/')
     }
+
+    //--------------------------------------------------------------------------
+
+    /*
+        login processes the authentication for users to log into their account
+    */
 
     * login (request, response) { 
         const userData = request.only('email', 'password') 
@@ -65,6 +86,7 @@ class UserController {
             response.redirect('back')
             return
         }
+
         const loginError = 'Invalid Credentials'
 
         try {
@@ -76,18 +98,42 @@ class UserController {
                 yield request.session.put({ display_name: current.display_name })
                 yield request.session.put({ first_name: current.first_name })
                 yield request.session.put({ last_name: current.last_name })
+                yield request.session.put({ role: current.role })
                 return response.redirect('home')
             }
         } catch (e) {
-            yield request.with({errors: e.message}).flash()
-            response.redirect('back')
+            yield response.sendView('login', { loginError })
         }
     }
+
+    //--------------------------------------------------------------------------
+
+    /*
+        logout logs a user out of their account and redirects to the login page
+    */
 
     * logout(request, response) {
         yield request.auth.logout()
         return response.redirect('/')
     }
+
+    //--------------------------------------------------------------------------
+
+    /*
+        delete deletes a user from the database
+    */
+
+    * delete (request, response) { 
+
+        const affectedRows = yield Database
+            .table('users')
+            .where({ email: request.currentUser.email })
+            .delete()
+
+        yield request.auth.logout()
+        response.redirect('/')
+    }
+
 }
 
-module.exports = UserController
+module.exports = AuthController

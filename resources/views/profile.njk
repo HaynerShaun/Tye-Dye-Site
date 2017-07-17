@@ -1,0 +1,61 @@
+{% extends 'custHeader' %}
+
+<!--
+    profile view displays a user's profile and allows a user to edit that info
+-->
+
+{% block cust %}
+    <div class="tab-content">
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <div id="profile" class="tab-pane fade in active">
+            <div>
+                <h1>{{ currentUser.display_name }}</h1>
+                <p>{{ currentUser.first_name }} {{ currentUser.last_name }}</p>
+                <p>{{ currentUser.email }}</p>
+            </div>
+            <br><br><br><br>
+            <a data-toggle="tab" href="#edit" class="btn btn-info" role="button">Edit profile</a>
+            <button type="button" class="btn btn-danger" onclick="unhide('deleteUser')">Delete Profile</button>
+            <span id="deleteUser" style="visibility: hidden;">
+                <span style="font-weight: bold;">Are you sure?</span>
+                <a href="delete" class="btn btn-success" role="button">Yes</a>
+                <button type="button" class="btn btn-danger" onclick="hide('deleteUser')">No</button>
+            </span>
+        </div>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <div id="edit" class="tab-pane fade">
+            <div>
+            <a data-toggle="tab" href="#profile"> Back </a>
+            </div>
+            <hr>
+            <h2>You can edit your profile here</h2>
+            {{ form.open({action: 'GeneralController.edit' }) }}
+
+                {{ csrfField }}
+
+                <fieldset class="form-group">
+                    {{ form.label('Email') }}
+                    {{ form.text('email', currentUser.email, { class: 'form-control' }) }}
+                </fieldset>
+
+                <fieldset class="form-group">
+                    {{ form.label('Display Name') }}
+                    {{ form.text('display_name', currentUser.display_name, { class: 'form-control' }) }}
+                </fieldset>
+
+                <fieldset class="form-group">
+                    {{ form.label('First Name') }}
+                    {{ form.text('first_name', currentUser.first_name, { class: 'form-control' }) }}
+                </fieldset>
+
+                <fieldset class="form-group">
+                    {{ form.label('Last Name') }}
+                    {{ form.text('last_name', currentUser.last_name, { class: 'form-control' }) }}
+                </fieldset>
+
+                {{ form.submit('Update', 'update', { class: 'btn btn-primary btn-block' }) }}
+            {{ form.close() }}
+        </div>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    </div>
+{% endblock %}

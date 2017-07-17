@@ -12,6 +12,7 @@ class UsersTableSchema extends Schema {
       table.string('display_name', 80).notNullable().unique()
       table.string('first_name')
       table.string('last_name')
+      table.string('role')
       table.timestamps()
     })
   }

@@ -1,0 +1,105 @@
+{% extends 'custHeader' %}
+
+<!--
+    custOrders view displays all of a user's orders
+-->
+
+{% block cust %}
+    <div class="page-header text-center">
+        <h3>Order history</h3>
+        <script>
+            function edit_policy() {
+                var policy = "Status: Received - You can edit here\n\n";
+                policy += "Status: Processing - Use Contact Us page\n\n";
+                policy += "Status: Completed - Your order has already shipped. ";
+                policy += "Once you receive your shirt, use the Contact Us page";
+                policy += "to discuss returns or exchanges";
+
+                alert(policy);
+            }
+        </script>
+        <h5><a onclick="edit_policy()" href="#">Order Edit Policy</a></h5>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#current_orders">
+                Current Orders
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#past_orders">
+                Past Orders 
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div id="current_orders" class="tab-pane fade in active">
+            {% for order in orders %}
+                {% if order.status != "completed" %}
+                    <br>
+                    <ul class="list-group">
+                        <li class="list-group-item">Customer: {{order.display_name}}</li>
+                        <li class="list-group-item">Size: {{order.size}} </li>
+                        <li class="list-group-item">Design: {{order.design}}</li>
+                        <li class="list-group-item">
+                        Colors:
+                        {% for color in order.colors %}
+                            <p style="text-indent: 50px;">{{color}}</p>
+                        {% endfor %}
+                        </li>
+                        <li class="list-group-item">Ordered: {{order.created_at}}</li>
+                        <li class="list-group-item">Status: {{order.status}}</li>
+                        <li class="list-group-item">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3 text-center">
+                                        <a role="button" class="btn btn-danger" onclick="unhide('deleteOrder')">Cancel Order</a>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <span id="deleteOrder" style="visibility: hidden;">
+                                            <span style="font-weight: bold;">Are you sure?</span>
+                                            <a href="/orderDelete/{{ order.id }}" class="btn btn-success" role="button">Yes</a>
+                                            <button type="button" class="btn btn-danger" onclick="hide('deleteOrder')">No</button>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        {% if order.status == "received" %}
+                                            <a role="button" class="btn btn-info" href="/orderEdit/{{ order.id }}">Edit Order</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                {% endif %}
+            {% else %}
+                <h2> No orders found </h2>
+            {% endfor %}
+        </div>
+        <div id="past_orders" class="tab-pane fade">
+            {% for order in orders %}
+                {% if order.status == "completed" %}
+                    <br>
+                    <ul class="list-group">
+                        <li class="list-group-item">Customer: {{order.display_name}}</li>
+                        <li class="list-group-item">Size: {{order.size}} </li>
+                        <li class="list-group-item">Design: {{order.design}}</li>
+                        <li class="list-group-item">
+                            Colors:
+                                {% for color in order.colors %}
+                                    <p style="text-indent: 50px;">{{color}}</p>
+                                {% endfor %}
+                        </li>
+                        <li class="list-group-item">Ordered: {{order.created_at}}</li>
+                        <li class="list-group-item">Status: {{order.status}}</li>
+                        <li class="list-group-item"><a href='/reorder/{{ order.id }}'> Order again </a></li>
+                    </ul>
+                {% endif %}
+            {% else %}
+                <h2> No orders found </h2>
+            {% endfor %}
+        </div>
+        <div id="edit_order" class="tab-pane fade">
+        </div>
+    </div>
+{% endblock %}

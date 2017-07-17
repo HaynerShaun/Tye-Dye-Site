@@ -1,0 +1,78 @@
+{% extends 'master' %}
+
+<!--
+    make view allows a user to design and submit a shirt order
+-->
+
+{% block content %}
+    <div class="page-header text-center">
+        <h2>Welcome to the design your own shirt page!</h2>
+    </div>
+    <br>
+    <br>
+    <div class="container-fluid">
+        <div class="row"> 
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <form role="form" method="POST">
+                    {{ csrfField }}
+                    <div id="size" class="text-center">
+                        <h4>Pick your shirt size</h4>
+                        <br>
+                        <table class="table text-center">
+                            <tr>
+                                <td><input type="radio" name="size" id="size-small" value="small"> Small</td>
+                                <td><input type="radio" name="size" id="size-medium" value="medium"> Medium</td>
+                                <td><input type="radio" name="size" id="size-large" value="large"> Large</td>
+                                <td><input type="radio" name="size" id="size-xlarge" value="xlarge"> X-Large</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <div id="design" class="text-center">
+                        <h4>Pick your shirt design</h4>
+                        <br>
+                        <table class="table text-center">
+                            <tr>
+                                <td><input type="radio" name="design" id="design-spiral" value="spiral"> Spiral</td>
+                                <td><input type="radio" name="design" id="design-spider" value="spider"> Spider</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id="colors" class="text-center" id="colors_display" >
+                        <h4>Pick your colors</h4>
+                        <br>
+                        <table class="table text-center">
+                            <tr>
+                                {% set count = 0 %}
+                                {% set columns = 2 %}
+                                {% for color in colors %} 
+                                        <td width="{{ 100 / columns * 0.30 }}%" style="background-color: {{ color.color_code }} ;"></td>
+                                        <td width="{{ 100 / columns * 0.70 }}%">
+                                            {{ color.name }} <br>
+                                            <input type="checkbox" name="color" id="color-{{ color.name }}" value="{{ color.name }}">
+                                        </td>
+                                        {% set count = count + 1 %}
+                                        {% if count % columns == 0 %}
+                                            </tr><tr>
+                                        {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <div id="submit" class="container">
+                        <input type="submit" value="Finish" class="btn btn-info btn-block" action="OrderController.create">
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                </form>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+{% endblock %}
